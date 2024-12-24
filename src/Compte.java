@@ -9,9 +9,12 @@ public abstract class Compte {
         this.proprietaire = proprietaire;
     }
 
-    public String getNumero() { return numero; }
-    public double getSolde() { return solde; }
-    public Client getProprietaire() { return proprietaire; }
+    public String getNumero() {
+        return numero; }
+    public double getSolde() {
+        return solde; }
+    public Client getProprietaire() {
+        return proprietaire; }
 
     public abstract void retirer(double montant);
     public void deposer(double montant) {
