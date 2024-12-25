@@ -13,6 +13,8 @@ public class Operation {
         this.compteAssocie = compteAssocie;
     }
 
+
+
     public String getType(){
         return type;
     }

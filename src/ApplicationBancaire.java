@@ -4,6 +4,8 @@ public class ApplicationBancaire {
 
     private static List<Client> clients = new ArrayList<>();
     private static List<Compte> comptes = new ArrayList<>();
+    private static List<Operation> operations = new ArrayList<>();
+
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -27,15 +29,18 @@ public class ApplicationBancaire {
                         afficherComptes();
                         break;
                     case 5:
-                        System.out.println("Merci d'utiliser l'application bancaire. À bientôt !");
+                        afficherHistoriqueDesOperations(scanner);
                         break;
+                        case 6:
+                            System.out.println("Merci d'utiliser l'application bancaire. À bientôt !");
+                            break;
                     default:
                         System.out.println("Option invalide. Veuillez réessayer.");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Veuillez entrer un nombre valide.");
             }
-        } while (choix != 5);
+        } while (choix != 6);
 
         scanner.close();
     }
@@ -48,7 +53,8 @@ public class ApplicationBancaire {
         System.out.println("2. Gérer les Comptes Bancaires");
         System.out.println("3. Effectuer des Opérations Bancaires");
         System.out.println("4. Afficher tous les comptes bancaires");
-        System.out.println("5. Quitter l'Application");
+        System.out.println("5. Afficher historique des operations");
+        System.out.println("6. Quitter l'Application");
         System.out.print("Veuillez sélectionner une option (1-5) : ");
     }
 
@@ -58,8 +64,9 @@ public class ApplicationBancaire {
         System.out.println("==========================================");
         System.out.println("1. Ajouter un nouveau client");
         System.out.println("2. Afficher la liste des clients");
-        System.out.println("3. Retour au menu principal");
-        System.out.print("Veuillez sélectionner une option (1-3) : ");
+        System.out.println("3. Filtrer les clients par type de compte");
+        System.out.println("4. Retour au menu principal");
+        System.out.print("Veuillez sélectionner une option (1-4) : ");
 
         try {
             int choix = Integer.parseInt(scanner.nextLine());
@@ -71,6 +78,9 @@ public class ApplicationBancaire {
                     afficherClients();
                     break;
                 case 3:
+                    filtrerClientsParTypeDeCompte(scanner);
+                    break;
+                case 4:
                     break;
                 default:
                     System.out.println("Option invalide.");
@@ -128,6 +138,34 @@ public class ApplicationBancaire {
         }
         return null;
     }
+    public static void filtrerClientsParTypeDeCompte(Scanner scanner) {
+        System.out.println("Sélectionner le type de compte à filtrer :");
+        System.out.println("1. Compte Courant");
+        System.out.println("2. Compte Epargne");
+        System.out.print("Veuillez sélectionner une option (1-2) : ");
+        int choixTypeCompte = Integer.parseInt(scanner.nextLine());
+
+        if (choixTypeCompte == 1) {
+            for (Compte compte : comptes) {
+                if(compte instanceof  CompteCourant){
+                    System.out.println(compte.toString());
+                }
+            }
+        } else if (choixTypeCompte == 2) {
+            // Filtrer les clients qui ont un compte épargne
+            for (Compte compte : comptes) {
+                if(compte instanceof  CompteEpargne){
+                    System.out.println(compte.toString());
+                }
+            }
+        } else {
+            System.out.println("Option invalide.");
+            return;
+        }
+
+
+        }
+
 
     public static void gererComptes(Scanner scanner) {
         System.out.println("==========================================");
@@ -255,6 +293,7 @@ public class ApplicationBancaire {
         }
         double montant = Double.parseDouble(lireEntreeValidee(scanner, "Montant du dépôt : ", "^[0-9]+(\\.[0-9]{1,2})?$"));
         compte.deposer(montant);
+        operations.add( new Operation("Dépot", montant, new Date(),compte));
         System.out.println("Dépôt effectué avec succès !");
     }
 
@@ -266,6 +305,7 @@ public class ApplicationBancaire {
         }
         double montant = Double.parseDouble(lireEntreeValidee(scanner, "Montant du retrait : ", "^[0-9]+(\\.[0-9]{1,2})?$"));
         if (compte.retirer(montant)) {
+            operations.add( new Operation("Retrait", montant, new Date(),compte));
             System.out.println("Retrait effectué avec succès !");
         } else {
             System.out.println("Fonds insuffisants.");
@@ -288,6 +328,8 @@ public class ApplicationBancaire {
         double montant = Double.parseDouble(lireEntreeValidee(scanner, "Montant du virement : ", "^[0-9]+(\\.[0-9]{1,2})?$"));
         if (compteSource.retirer(montant)) {
             compteCible.deposer(montant);
+            operations.add( new Operation("Virement de "+ compteSource.getProprietaire().getNom() +"à"+ compteCible.getProprietaire().getNom(), montant, new Date(),null));
+
             System.out.println("Virement effectué avec succès !");
         } else {
             System.out.println("Fonds insuffisants.");
@@ -303,5 +345,17 @@ public class ApplicationBancaire {
         }
         return null;
     }
+    public static void afficherHistoriqueDesOperations(Scanner scanner) {
+        Compte compte = rechercherCompte(scanner);
+        if (operations.isEmpty()) {
+            System.out.println("Aucune opération effectuée sur ce compte.");
+        } else {
+            System.out.println("Historique des opérations pour le compte " + compte.getNumero() + " :");
+            for (Operation operation : operations) {
+                System.out.println(operation.toString());
+            }
+        }
+    }
+
 
 }
