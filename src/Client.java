@@ -1,5 +1,5 @@
 public class Client {
-    private String id;
+    private int id;
     private String nom;
     private String prenom;
     private String email;
@@ -7,7 +7,7 @@ public class Client {
     private String telephone;
 
     // Constructeur, getters, setters
-    public Client(String id, String nom, String prenom, String email, String adresse, String telephone) {
+    public Client(int id, String nom, String prenom, String email, String adresse, String telephone) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -21,18 +21,48 @@ public class Client {
     }
 
     // Getters
-    public String getId() {
-        return id; }
+    public int getId() {
+        return id;
+    }
     public String getNom() {
-        return nom; }
+        return nom;
+    }
     public String getPrenom() {
-        return prenom; }
+        return prenom;
+    }
     public String getEmail() {
-        return email; }
+        return email;
+    }
     public String getAdresse() {
-        return adresse; }
+        return adresse;
+    }
     public String getTelephone() {
-        return telephone; }
+        return telephone;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
 
     @Override
     public String toString() {

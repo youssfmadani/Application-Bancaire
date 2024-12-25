@@ -26,6 +26,6 @@ public abstract class Compte {
         return "Compte : " +
                 "numero='" + numero + '\'' +
                 ", solde=" + solde +
-                ", proprietaire=" + proprietaire;
+                ", proprietaire= " + proprietaire.getNom() +" "+ proprietaire.getPrenom();
     }
 }
