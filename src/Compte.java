@@ -16,7 +16,7 @@ public abstract class Compte {
     public Client getProprietaire() {
         return proprietaire; }
 
-    public abstract void retirer(double montant);
+    public abstract boolean retirer(double montant);
     public void deposer(double montant) {
         this.solde += montant;
     }

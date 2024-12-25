@@ -14,11 +14,12 @@ public class CompteEpargne extends Compte {
     }
 
     @Override
-    public void retirer(double montant) {
+    public boolean retirer(double montant) {
         if (solde - montant >= 0) {
             solde -= montant;
         } else {
             System.out.println("Fonds insuffisants pour effectuer ce retrait.");
         }
+        return false;
     }
 }

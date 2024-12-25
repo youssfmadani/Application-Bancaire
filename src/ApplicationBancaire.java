@@ -21,7 +21,7 @@ public class ApplicationBancaire {
                         gererComptes(scanner);
                         break;
                     case 3:
-                        // effectuerOperations(scanner); // Add later
+                        effectuerOperations(scanner); // Add later
                         break;
                     case 4:
                         afficherComptes();
@@ -215,4 +215,93 @@ public class ApplicationBancaire {
             System.out.println("Client introuvable.");
         }
     }
+    public static void effectuerOperations(Scanner scanner) {
+        System.out.println("==========================================");
+        System.out.println("         OPÉRATIONS BANCAIRES");
+        System.out.println("==========================================");
+        System.out.println("1. Effectuer un dépôt");
+        System.out.println("2. Effectuer un retrait");
+        System.out.println("3. Effectuer un virement");
+        System.out.println("4. Retour au menu principal");
+        System.out.print("Veuillez sélectionner une option (1-4) : ");
+
+        try {
+            int choix = Integer.parseInt(scanner.nextLine());
+            switch (choix) {
+                case 1:
+                    effectuerDepot(scanner);
+                    break;
+                case 2:
+                    effectuerRetrait(scanner);
+                    break;
+                case 3:
+                    effectuerVirement(scanner);
+                    break;
+                case 4:
+                    break;
+                default:
+                    System.out.println("Option invalide.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Veuillez entrer un nombre valide.");
+        }
+    }
+
+    private static void effectuerDepot(Scanner scanner) {
+        Compte compte = rechercherCompte(scanner);
+        if (compte == null) {
+            System.out.println("Compte introuvable.");
+            return;
+        }
+        double montant = Double.parseDouble(lireEntreeValidee(scanner, "Montant du dépôt : ", "^[0-9]+(\\.[0-9]{1,2})?$"));
+        compte.deposer(montant);
+        System.out.println("Dépôt effectué avec succès !");
+    }
+
+    private static void effectuerRetrait(Scanner scanner) {
+        Compte compte = rechercherCompte(scanner);
+        if (compte == null) {
+            System.out.println("Compte introuvable.");
+            return;
+        }
+        double montant = Double.parseDouble(lireEntreeValidee(scanner, "Montant du retrait : ", "^[0-9]+(\\.[0-9]{1,2})?$"));
+        if (compte.retirer(montant)) {
+            System.out.println("Retrait effectué avec succès !");
+        } else {
+            System.out.println("Fonds insuffisants.");
+        }
+    }
+
+    private static void effectuerVirement(Scanner scanner) {
+        System.out.println("Compte source :");
+        Compte compteSource = rechercherCompte(scanner);
+        if (compteSource == null) {
+            System.out.println("Compte source introuvable.");
+            return;
+        }
+        System.out.println("Compte cible :");
+        Compte compteCible = rechercherCompte(scanner);
+        if (compteCible == null) {
+            System.out.println("Compte cible introuvable.");
+            return;
+        }
+        double montant = Double.parseDouble(lireEntreeValidee(scanner, "Montant du virement : ", "^[0-9]+(\\.[0-9]{1,2})?$"));
+        if (compteSource.retirer(montant)) {
+            compteCible.deposer(montant);
+            System.out.println("Virement effectué avec succès !");
+        } else {
+            System.out.println("Fonds insuffisants.");
+        }
+    }
+
+    private static Compte rechercherCompte(Scanner scanner) {
+        String numero = lireEntreeValidee(scanner, "Numéro de compte : ", "^[a-zA-Z0-9]+$");
+        for(Compte compte : comptes) {
+            if (compte.getNumero().equals(numero)) {
+                return compte;
+            }
+        }
+        return null;
+    }
+
 }
